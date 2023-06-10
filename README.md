@@ -19,11 +19,182 @@ A presentation that consist of easy understand visualization data from middlewar
 ![image](https://github.com/Poovaitamil/Simulation-project/assets/132209885/0bed7874-c9a3-4a66-9ead-c6d45878aed3)
 
 ## PROGRAM:
+#include<LiquidCrystal.h
+#define echo 9
+#define trigger 10
+#define tank_pump 4
+#define watering_pump 13
+#define moisture_sensor A0
+long duration;
+int distance;
+int moisture_value;
+int distance_percent;
+int moist_percent;
+LiquidCrystal lcd(12,11,8,7,6,5);
 
+void setup () {
+lcd.begin(20,4);
+pinMode(echo,INPUT);
+pinMode(moisture_sensor,INPUT);
+pinMode(trigger,OUTPUT);
+digitalWrite(trigger,LOW);
+pinMode(watering_pump,OUTPUT);
+pinMode(tank_pump,OUTPUT);
+digitalWrite(watering_pump,LOW);
+digitalWrite(tank_pump,LOW);
+lcd.setCursor(0,1);
+lcd.print(" Fully Automated " );
+lcd.setCursor(0,2);
+lcd.print(" Water Pumping" );
+lcd.setCursor(0,3);
+lcd.print(" System");
+delay(500);
+lcd.clear();
+}
+
+void loop(){
+
+// LEVEL SENSOR
+digitalWrite(trigger,LOW);
+delayMicroseconds(2);
+digitalWrite(trigger,HIGH);
+delayMicroseconds(10);
+digitalWrite(trigger,LOW);
+duration=pulseIn(echo,HIGH);
+distance=duration*0.017;
+distance_percent=map( distance,0,1023,0,100);
+moisture_value= analogRead(moisture_sensor);
+moist_percent=map(moisture_value,0,1023,0,100);
+condition();
+}
+void condition(){
+if (distance_percent>65 &&moist_percent<85){
+LCD_3();
+digitalWrite(tank_pump,LOW);
+digitalWrite(watering_pump,HIGH);
+delay(500);
+}
+else if (distance_percent<65 &&moist_percent>85)
+{
+LCD_2();
+digitalWrite(tank_pump,HIGH);
+digitalWrite(watering_pump,LOW);
+
+delay(500);
+}
+else if (distance_percent>65 &&moist_percent>85)
+{
+
+LCD_4();
+digitalWrite(tank_pump,LOW);
+digitalWrite(watering_pump,LOW);
+delay(500);
+
+}
+
+else if (distance_percent<65 &&moist_percent<85)
+{
+LCD_1();
+digitalWrite(tank_pump,HIGH);
+digitalWrite(watering_pump,HIGH);
+delay(500);
+
+}
+}
+
+void LCD_1()
+{
+lcd.clear();
+lcd.setCursor(0,0);
+lcd.print("TANK LEVEL= ");
+lcd.print(distance_percent);
+lcd.print("%");
+lcd.setCursor(0,1);
+lcd.print("MOIST CONTENT= ");
+lcd.print(moist_percent);
+lcd.print("%");
+lcd.setCursor(0,2);
+lcd.print("W-PUMP STATUS ");
+lcd.print(" ON");
+lcd.setCursor(0,3);
+lcd.print("T-PUMP STATUS ");
+lcd.print(" ON");
+}
+
+void LCD_2(){
+lcd.clear();
+lcd.setCursor(0,0);
+lcd.print("TANK LEVEL= ");
+lcd.print(distance_percent);
+lcd.print("%");
+lcd.setCursor(0,1);
+lcd.print("MOIST CONTENT= ");
+lcd.print(moist_percent);
+lcd.print("%");
+lcd.setCursor(0,2);
+lcd.print("W-PUMP STATUS ");
+lcd.print(" OFF");
+lcd.setCursor(0,3);
+lcd.print("T-PUMP STATUS ");
+lcd.print(" ON");
+}
+void LCD_3(){
+lcd.clear();
+lcd.setCursor(0,0);
+lcd.print("TANK LEVEL= ");
+lcd.print(distance_percent);
+lcd.print("%");
+lcd.setCursor(0,1);
+lcd.print("MOIST CONTENT= ");
+lcd.print(moist_percent);
+lcd.print("%");
+lcd.setCursor(0,2);
+lcd.print("W-PUMP STATUS ");
+lcd.print(" ON");
+lcd.setCursor(0,3);
+lcd.print("T-PUMP STATUS ");
+lcd.print(" OFF");
+}
+
+void LCD_4(){
+lcd.clear();
+lcd.setCursor(0,0);
+lcd.print("TANK LEVEL= ");
+lcd.print(distance_percent);
+lcd.print("%");
+lcd.setCursor(0,1);
+lcd.print("MOIST CONTENT= ");
+lcd.print(moist_percent);
+lcd.print("%");
+lcd.setCursor(0,2);
+lcd.print("W-PUMP STATUS");
+lcd.print(" OFF");
+lcd.setCursor(0,3);
+lcd.print("T-PUMP STATUS");
+lcd.print(" OFF");
+}
 ## RESULTS:
 ![out](https://github.com/Poovaitamil/Simulation-project/assets/132209885/2250f0b4-3f3c-4377-9709-349ea631ac76)
 
 ## CONCLUSION:
-
+This project presented a new design of water pump control for the development of smart irrigation system linked with a mobile application. The developed irrigation system supports the farmers to save wasted water, time and effort to increase the productivity of their crops. In the future work of this project, case studies of different crops will be used, and also automatic measuring the level of the water the tank to alert the farmers.Finally, applying the developed automatic irrigation system in the farms of india
 ## REFERENCE:
+[1] "Sensor based Automated Irrigation System with IOT", International Journal of Computer Science and Information Technologies, vol. 6, no. 6, pp. 5331- 5333, 2015.
 
+[2] Major Agricultural Problems of India and their Possible Solutions Article shared by: Puja Mondal, www.yourarticlelibrary.com
+
+[3] Shiraz Pasha B.R., Dr. B Yogesha, “Microcontroller Based Automated Irrigation System”, the International Journal of Engineering and Science (IJES), Volume3, Issue 7, pp 06-09, June 2014.
+
+[4] IoT based smart irrigation system using soil moisture sensor and ESP 8266 Node MCU by Abhiiemanyu Pandit, 15th July – 2015.
+
+[5] N. A. Z. M. Noar, M. M. Kamal, "The development of smart flood monitoring system using ultrasonic sensor with Blynk applications", 2017
+
+[6] P.Rajalakshmi, Devi Mahalashmi (2016) “IOT based crop-field monitoring and irrigation automation”10th International Conference on Intelligent Systems and Control (ISCO).IEEE Press. Year: 2016.
+
+[7] Dr.P.Sukumar.Ph.D.S.Akshaya, D.Chandrika, R.Dhilipkumar, “IOT based agriculture crop-field monitoring system and irrigation Automation”2018.
+
+[8] Shrinidhi Rajagopal; Vallidevi Krishnamurthy OO design for an IoT based automated plant watering system, 2017 International Conference on Computer, Communication and Signal Processing (ICCCSP) Year: 2017.
+
+[9] Liu, C. et al., 2011. The Application of Soil Temperature Measurement by Temperature Sensors. Proceedings of 2011 International Conference on Electronic & Mechanical Engineering and Information Technology.
+
+[10] Water Level Detection System Based on Ultrasonic Sensors HC-SR04 and ESP8266-12 Modules Hanan, Anak Agung Ngurah Gunawan, Made Sumadiyasa, Department of Physics, University of Udayana at Bali, Indonesia
